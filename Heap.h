@@ -51,8 +51,8 @@ namespace heap_space {
 			return size;
 		}
 
-		ET getMax() {
-			return heapArray[1].value;
+		HeapStruct<ET> getMax() {
+			return heapArray[1];
 		}
 
 		void insertElement(int p, ET val) {
@@ -88,7 +88,8 @@ namespace heap_space {
 		void deleteElement() {
 			int pos = 1;
 			heapArray[pos] = heapArray[size];
-			heapArray[size] = 0;
+			heapArray[size].priority = 0;
+			heapArray[size].value = 0;
 
 			size--;
 			heapDown(pos);
@@ -136,11 +137,33 @@ namespace heap_space {
 			heap[parent].value = temp_v;
 		}
 
+		bool search_heap(int p, ET val, int& pos) {
+			bool res = false;
+			
+			
+			while (res == false && pos <= size) {
+				if (heapArray[pos].priority == p && heapArray[pos].value == val) {
+					res = true;
+				}
+				else {
+					res = false;
+				}
+
+				pos++;
+			}
+
+			return res;
+		}
+
+		void update_key(int p, int found_pos) {
+			heapArray[found_pos].priority = p;
+		}
+
 		void print_heap() {
 			//print heap here
 
 			for (int i = 1; i <= size; i++) {
-				std::cout << heapArray[i].priority << " " << heapArray[i].value << std::endl;
+				std::cout << heapArray[i].priority << " " << heapArray[i].value << ", ";
 			}
 		}
 
