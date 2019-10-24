@@ -1,43 +1,55 @@
 #include <iostream>
+#include <fstream>
 #include "Heap.h"
 
 using namespace std;
 using namespace heap_space;
 
+void process_order();
+
+ifstream inf;
+Heap<int> h(100);
+
 int main()
 {
-	Heap<int> h(5);
-	int top;
-	int length;
+	int num = 0;
+	int priority = 0;
+	int top = 0;
+	int length = 0;
+	char ch = 0;
 
-	h.insertElement(10);
-	h.insertElement(15);
-	h.insertElement(20);
-	h.insertElement(25);
-	h.insertElement(50);
-	h.insertElement(66);
-	h.insertElement(68);
-	h.insertElement(77);
-	h.insertElement(80);
-	h.insertElement(99);
-	h.insertElement(100);
-	h.insertElement(110);
+	inf.open("HeapPriorityNbrs.dat");
 
-	h.print_heap();
-	top = h.getMax();
+	if (!inf) {
+		cout << "Error opening file!";
+		return 0;
+	}
+
+	inf >> num;
+	inf >> ch;
+	inf >> priority;
+
+	h.insertElement(priority, num);
+
+	while (inf >> num) {
+		inf >> ch;
+		inf >> priority;
+
+		h.insertElement(priority, num);
+	}
+
 	length = h.getHeapSize();
-
-	cout << "\nTop of Heap: " << top;
-	cout << "\nLength of Heap: " << length << endl << endl;
-
-	h.deleteElement();
-
 	h.print_heap();
-	top = h.getMax();
-	length = h.getHeapSize();
 
-	cout << "\nTop of Heap: " << top;
-	cout << "\nLength of Heap: " << length;
+	cout << "\nHeap size: " << length;
+
+	cout << endl;
+
+	inf.close();
 
 	return 0;
+}
+
+void process_order() {
+
 }

@@ -5,15 +5,22 @@
 
 namespace heap_space {
 	template<typename ET>
+	struct HeapStruct {
+		int priority;
+		ET value;
+	};
+
+	template<typename ET>
 	class Heap {
 	public:
 		Heap(int cap) {
-			heapArray = new ET[cap];
+			heapArray = new HeapStruct<ET>[cap];
 			size = 0;
 			capacity = cap;
 
 			for (int i = 0; i < cap; i++) {
-				heapArray[i] = 0;
+				heapArray[i].priority = 0;
+				heapArray[i].value = 0;
 			}
 		}
 
@@ -21,16 +28,18 @@ namespace heap_space {
 		void extraCapacity() {
 			int extra = capacity * 2;
 			capacity = extra;
-			ET* another_heap = new ET[capacity];
+			HeapStruct<ET>* another_heap = new HeapStruct<ET>[capacity];
 			//ET* p = heapArray;
 
 			for (int i = 0; i < capacity; i++) {
-				another_heap[i] = 0;
+				another_heap[i].priority = 0;
+				another_heap[i].value = 0;
 			}
 
 			for (int i = 1; i <= size; i++) {
 				//assertion fails
-				another_heap[i] = heapArray[i];
+				another_heap[i].priority = heapArray[i].priority;
+				another_heap[i].value = heapArray[i].value;
 			}
 
 			delete[] heapArray;
@@ -42,11 +51,11 @@ namespace heap_space {
 			return size;
 		}
 
-		int getMax() {
-			return heapArray[1];
+		ET getMax() {
+			return heapArray[1].value;
 		}
 
-		void insertElement(ET value) {
+		void insertElement(int p, ET val) {
 			int parent;
 			int pos;
 
@@ -55,17 +64,19 @@ namespace heap_space {
 			}
 
 			//empty heap
-			if (heapArray[1] == 0) {
-				heapArray[1] = value;
+			if (heapArray[1].priority == 0 && heapArray[1].value == 0) {
+				heapArray[1].priority = p;
+				heapArray[1].value = val;
 				size++;
 			}
 			else { //non-empty heap
-				heapArray[size + 1] = value;
-				parent = (size + 1) / 2;
+				heapArray[size + 1].priority = p;
+				heapArray[size + 1].value = val;
+				parent = (size + 1) / 2; //size+1
 
 				//determine if val inserted is greater
 				//than parent, if so then heapify up
-				if (heapArray[size + 1] > heapArray[parent]) {
+				if (heapArray[size + 1].priority > heapArray[parent].priority) {
 					pos = size + 1;
 					heapUp(pos);
 				}
@@ -85,12 +96,12 @@ namespace heap_space {
 		}
 
 		void heapUp(int pos) {
-			int parent = (pos + 1) / 2;
+			int parent = (pos) / 2;
 
-			while (heapArray[pos] > heapArray[parent] && parent != 0) {
+			while (heapArray[pos].priority > heapArray[parent].priority && parent != 0) {
 				swap(heapArray, pos, parent);
 				pos = parent;
-				parent = (pos + 1) / 2;
+				parent = (pos) / 2;
 			}
 		}
 
@@ -99,11 +110,11 @@ namespace heap_space {
 			int left = 2 * pos;
 			int right = (2 * pos) + 1;
 
-			if (left <= size && heapArray[largest] < heapArray[left]) {
+			if (left <= size && heapArray[largest].priority < heapArray[left].priority) {
 				largest = left;
 			}
 
-			if (right <= size && heapArray[largest] < heapArray[right]) {
+			if (right <= size && heapArray[largest].priority < heapArray[right].priority) {
 				largest = right;
 			}
 
@@ -114,22 +125,27 @@ namespace heap_space {
 
 		}
 
-		void swap(ET heap[], int pos, int parent) {
-			int temp = heap[pos];
-			heap[pos] = heap[parent];
-			heap[parent] = temp;
+		void swap(HeapStruct<ET> heap[], int pos, int parent) {
+			int temp_p = heap[pos].priority;
+			ET temp_v = heap[pos].value;
+
+			heap[pos].priority = heap[parent].priority;
+			heap[pos].value = heap[parent].value;
+
+			heap[parent].priority = temp_p;
+			heap[parent].value = temp_v;
 		}
 
 		void print_heap() {
 			//print heap here
 
 			for (int i = 1; i <= size; i++) {
-				std::cout << heapArray[i] << " ";
+				std::cout << heapArray[i].priority << " " << heapArray[i].value << std::endl;
 			}
 		}
 
 	private:
-		ET* heapArray;
+		HeapStruct<ET>* heapArray;
 		int size;
 		int capacity;
 	};
