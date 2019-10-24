@@ -1,3 +1,18 @@
+/*
+Programmer Name: Brandon Jinright
+Program Name: Heap Priority Queue Program
+Description: This program reads in a set of
+numbers which represents an order number
+followed by a priority number. Each order is
+inserted into a heap according to its priority,
+the highest priority is at the top. The program
+then processes the first 50 requests (deletes)
+but only prints the first 20 after 100 requests 
+are entered. After that, the next 100 are entered,
+followed by the last requests.
+Date: 10/24/2019
+*/
+
 #include <iostream>
 #include <fstream>
 #include "Heap.h"
@@ -60,11 +75,6 @@ int main()
 
 	process_orders();
 
-	//length = h.getHeapSize();
-	//h.print_heap();
-
-	//cout << "\nHeap size: " << length;
-
 	cout << endl;
 
 	inf.close();
@@ -84,12 +94,12 @@ void process_orders() {
 	process = 1;
 	print = 1;
 
-	//delete the first 50 requests
+	//delete (process) the first 50 requests
 	while (process != 50) {
 		max = h.getMax();
 		h.deleteElement();
 
-		//print only the first 20 requests
+		//print only the first 20 requests that are processed
 		if (print < 20) {
 			cout << max.priority << "-" << max.value << "; ";
 		}
